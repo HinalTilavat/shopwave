@@ -52,7 +52,7 @@ export const AnimatedSplashScreen = () => {
       }),
     ]).start(() => {
       // Check if the user is authenticated or ID is stored
-      if (isAuthenticated && user) {
+      if (isAuthenticated) {
         router.replace('/(tabs)/profile');
       } else {
         router.replace('/login');
