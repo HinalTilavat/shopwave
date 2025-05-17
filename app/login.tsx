@@ -7,7 +7,9 @@ import {
   TouchableOpacity, 
   ScrollView, 
   KeyboardAvoidingView, 
-  Platform 
+  Platform
+  
+  
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -21,6 +23,9 @@ export default function LoginScreen() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const { login, loading, error, clearError } = useAuth();
+  // const [status, setStatus] = useState('low');
+  const [currentNumber, setCurrentNumber] = useState(25);
+  const [listOfWin, setListOfWin] = useState<string[] | []>([]);
 
 
   // useEffect(() => {
@@ -42,6 +47,24 @@ export default function LoginScreen() {
     router.push('/register');
   };
 
+  const GuessNumber = (currentStatus: string) => {
+    // setStatus(currentStatus);
+    const randomNumber = Math.floor(Math.random() * 100) + 1;
+    console.log('Generated Number:', randomNumber);
+   
+    if (currentStatus === 'high' && randomNumber > currentNumber) {
+      setCurrentNumber(randomNumber);
+      alert('you win');
+      setListOfWin([...listOfWin, "win"]);
+      
+    }else {
+      setCurrentNumber(randomNumber);
+      alert('you lose');
+      setListOfWin([...listOfWin, "lose"]);
+
+    }
+  }
+
   return (
     <KeyboardAvoidingView
       style={styles.keyboardAvoid}
@@ -51,66 +74,21 @@ export default function LoginScreen() {
         contentContainerStyle={styles.scrollContainer}
         keyboardShouldPersistTaps="handled"
       >
-        <SafeAreaView style={styles.container}>
-          <LinearGradient
-            colors={['#7209B7', '#3A0CA3']}
-            start={{ x: 0, y: 0 }}
-            end={{ x: 1, y: 1 }}
-            style={styles.header}
-          >
-            <View style={styles.logoContainer}>
-              <ShoppingBag size={44} color="#ffffff" />
-            </View>
-            <Text style={styles.headerTitle}>ShopWave</Text>
-            <Text style={styles.headerSubtitle}>Sign in to continue shopping</Text>
-          </LinearGradient>
-          
-          <View style={styles.formContainer}>
-            <ErrorMessage message={error} onDismiss={clearError} />
-            
-            <View style={styles.inputGroup}>
-              <Text style={styles.inputLabel}>Username</Text>
-              <View style={styles.inputContainer}>
-                <User size={20} color="#A0AEC0" style={styles.inputIcon} />
-                <TextInput
-                  style={styles.input}
-                  placeholder="Enter your username"
-                  value={username}
-                  onChangeText={setUsername}
-                  autoCapitalize="none"
-                />
-              </View>
-            </View>
-            
-            <View style={styles.inputGroup}>
-              <Text style={styles.inputLabel}>Password</Text>
-              <View style={styles.inputContainer}>
-                <LogIn size={20} color="#A0AEC0" style={styles.inputIcon} />
-                <TextInput
-                  style={styles.input}
-                  placeholder="Enter your password"
-                  value={password}
-                  onChangeText={setPassword}
-                  secureTextEntry
-                />
-              </View>
-            </View>
-            
-            <GradientButton
-              title="Login"
-              onPress={handleLogin}
-              loading={loading}
-              style={styles.loginButton}
-            />
-            
-            <View style={styles.registerContainer}>
-              <Text style={styles.registerText}>Don't have an account?</Text>
-              <TouchableOpacity onPress={navigateToRegister}>
-                <Text style={styles.registerLink}>Register</Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-        </SafeAreaView>
+        <Text>Genrated Number: {currentNumber}</Text>
+        <TouchableOpacity onPress={ () => GuessNumber("high")}>
+          <Text style={{ color: 'black', fontSize: 20 }}>High</Text>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => GuessNumber("low")}>
+          <Text style={{ color: 'black', fontSize: 20 }}>law</Text>
+        </TouchableOpacity>
+         <TouchableOpacity onPress={navigateToRegister}>
+                <Text>View all Resule</Text>
+          </TouchableOpacity>
+      {listOfWin && listOfWin.length > 0 && listOfWin.map((item, index) => (
+        <Text key={index} style={{ color: 'black', fontSize: 20 }}>
+          User in {index + 1} round {item}
+        </Text>
+      ))}
       </ScrollView>
     </KeyboardAvoidingView>
   );

@@ -12,12 +12,16 @@ interface CartContextType extends CartState {
   removeFromCart: (productId: number) => void;
   updateQuantity: (productId: number, quantity: number) => void;
   clearCart: () => void;
+  TotalWin: number;
+  TotalLose: number;
 }
 
 const initialState: CartState = {
   items: [],
   totalItems: 0,
   totalPrice: 0,
+  TotalWin: 0,
+  TotalLose: 0,
 };
 
 const calculateCartTotals = (items: CartItem[]) => {
